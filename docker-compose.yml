@@ -1,0 +1,33 @@
+# docker-compose.yml
+
+version: '3.8'
+services:
+  # app:
+  #   container_name: new-project-app-container
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #     args:
+  #       - DATABASE_URL=${DATABASE_URL}
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - .:/usr/src/app
+  #     - /usr/src/app/node_modules
+  #   ports:
+  #     - '3000:3000'
+  #   depends_on:
+  #     - postgres
+
+  postgres:
+    image: postgres:alpine3.19
+    container_name: postgres
+    restart: always
+    env_file:
+      - .env.development
+    volumes:
+      - nestjs-auth-postgres-volume:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+volumes:
+  nestjs-auth-postgres-volume:
