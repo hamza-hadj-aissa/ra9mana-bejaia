@@ -16,7 +16,6 @@ export class AuthTokensService {
   ) {}
 
   async createOrUpdateAuthTokens(userId: string, token: string) {
-    console.log('userId', userId);
     return await this.databaseService.jwt.upsert({
       where: {
         userId,
