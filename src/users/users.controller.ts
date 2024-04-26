@@ -3,6 +3,7 @@ import {
   ConflictException,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   NotFoundException,
   Param,
@@ -23,7 +24,7 @@ import { UsersService } from './users.service';
 
 @Controller('users')
 @Roles(Role.ADMIN)
-export class UsersController {
+export class UserController {
   constructor(
     private readonly usersService: UsersService,
     private readonly hashingService: HashingService,
@@ -100,7 +101,9 @@ export class UsersController {
     @Request() req,
   ): Promise<User | null> {
     if (Number(id) !== Number(req.user.sub)) {
-      throw new ConflictException('User contradiction');
+      throw new ForbiddenException(
+        'You are not allowed to access this resource',
+      );
     }
     const user = await this.usersService.findOne(Number(id));
     if (!user) {

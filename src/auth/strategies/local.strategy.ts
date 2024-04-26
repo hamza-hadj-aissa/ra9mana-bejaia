@@ -4,6 +4,7 @@ import { Strategy } from 'passport-local';
 import { User } from 'src/users/entities/user.entity';
 import { AuthService } from '../auth.service';
 import { ConfigService } from '@nestjs/config';
+import envFieldsNames from 'config/fields.env';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
@@ -12,8 +13,8 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
     private readonly authService: AuthService,
   ) {
     super({
-      usernameField: configService.get('LOCAL_AUTH_USERNAME_FIELD'),
-      passwordField: configService.get('LOCAL_AUTH_PASSWORD_FIELD'),
+      usernameField: configService.get(envFieldsNames.localAuth.USERNAME_FIELD),
+      passwordField: configService.get(envFieldsNames.localAuth.PASSWORD_FIELD),
     });
   }
 

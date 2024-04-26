@@ -3,7 +3,7 @@ import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
 import { DatabaseService } from 'src/database/database.service';
 import { UsersService } from './users.service';
 
-// const fakeUser: Prisma.UsersCreateInput = {
+// const fakeUser: Prisma.userCreateInput = {
 //   name: 'John Doe',
 //   email: 'johnDoe@gmail.com',
 //   password: 'password',
@@ -11,7 +11,7 @@ import { UsersService } from './users.service';
 //   role: 'ADMIN',
 // };
 
-// const fakeUsers = [
+// const fakeuser = [
 //   {
 //     id: 1,
 //     name: 'John Doe',
@@ -54,9 +54,9 @@ import { UsersService } from './users.service';
 //   },
 // ];
 
-// let users: Prisma.UsersCreateInput[] = [];
+// let user: Prisma.userCreateInput[] = [];
 
-describe('UsersService', () => {
+describe('usersService', () => {
   let service: UsersService;
   let databaseServiceMock: DeepMockProxy<DatabaseService>;
   beforeEach(async () => {
@@ -73,7 +73,7 @@ describe('UsersService', () => {
 
     service = module.get<UsersService>(UsersService);
 
-    // users = [];
+    // user = [];
   });
 
   it('should be defined', () => {
@@ -81,11 +81,11 @@ describe('UsersService', () => {
   });
 
   // it('should create a user', async () => {
-  //   databaseServiceMock.users.create = jest.fn().mockResolvedValue({
-  //     data: (user: Prisma.UsersCreateInput) => {
-  //       users.push(user);
+  //   databaseServiceMock.user.create = jest.fn().mockResolvedValue({
+  //     data: (user: Prisma.userCreateInput) => {
+  //       user.push(user);
   //       return {
-  //         id: users.length,
+  //         id: user.length,
   //         ...user,
   //       };
   //     },
@@ -98,13 +98,13 @@ describe('UsersService', () => {
   //   });
   // });
 
-  // it('should find all users', async () => {
-  //   databaseServiceMock.users.findMany.mockResolvedValue(fakeUsers);
-  //   expect(service.findAll()).toEqual(fakeUsers);
+  // it('should find all user', async () => {
+  //   databaseServiceMock.user.findMany.mockResolvedValue(fakeuser);
+  //   expect(service.findAll()).toEqual(fakeuser);
   // });
 
   // it('should find a user by id', async () => {
-  //   const user: Prisma.UsersCreateInput = {
+  //   const user: Prisma.userCreateInput = {
   //     name: 'John Doe',
   //     email: 'johnDoe@gmail.com',
   //     password: 'password',
@@ -120,7 +120,7 @@ describe('UsersService', () => {
   // });
 
   // it('should find a user by role', async () => {
-  //   const user: Prisma.UsersCreateInput = {
+  //   const user: Prisma.userCreateInput = {
   //     name: 'John Doe',
   //     email: 'johnDoe@gmail.com',
   //     password: 'password',
@@ -133,7 +133,7 @@ describe('UsersService', () => {
   // });
 
   // it('should update a user', async () => {
-  //   const user: Prisma.UsersCreateInput = {
+  //   const user: Prisma.userCreateInput = {
   //     name: 'John Doe',
   //     email: 'johnDoe@gmail.com',
   //     password: 'password',
@@ -156,7 +156,7 @@ describe('UsersService', () => {
   // });
 
   // it('should remove a user', async () => {
-  //   const user: Prisma.UsersCreateInput = {
+  //   const user: Prisma.userCreateInput = {
   //     name: 'John Doe',
   //     email: 'johnDoe@gmail.com',
   //     password: 'password',

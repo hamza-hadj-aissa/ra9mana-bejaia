@@ -16,7 +16,10 @@ export class AuthTokensService {
   ) {}
 
   async createOrUpdateAuthTokens(userId: number, token: string) {
-    return await this.databaseService.refreshToken.upsert({
+    return await this.databaseService.jwt.upsert({
+      where: {
+        id: userId,
+      },
       create: {
         userId,
         token,
@@ -24,14 +27,11 @@ export class AuthTokensService {
       update: {
         token,
       },
-      where: {
-        userId,
-      },
     });
   }
 
   async findAuthTokensByUserId(userId: number) {
-    return await this.databaseService.refreshToken.findUnique({
+    return await this.databaseService.jwt.findUnique({
       where: {
         userId,
       },
@@ -39,7 +39,7 @@ export class AuthTokensService {
   }
 
   async findAuthTokensByToken(token: string) {
-    return await this.databaseService.refreshToken.findUnique({
+    return await this.databaseService.jwt.findUnique({
       where: {
         token,
       },
@@ -47,7 +47,7 @@ export class AuthTokensService {
   }
 
   async deleteRefreshToken(userId: number) {
-    return await this.databaseService.refreshToken.delete({
+    return await this.databaseService.jwt.delete({
       where: {
         userId,
       },
@@ -55,39 +55,20 @@ export class AuthTokensService {
   }
 
   async generateAuthTokens(user: User) {
-    const payload: JwtPayload = {
-      email: user.email,
-      sub: user.id,
-      role: user.role as Role,
-    };
-    const accessToken = await this.jwtService.signAsync(payload, {
-      secret: this.configService.get(envFieldsNames.jwt.ACCESS_TOKEN_SECRET),
-      expiresIn: this.configService.get(
-        envFieldsNames.jwt.ACCESS_TOKEN_EXPIRES_IN,
-      ),
-    });
-    const refreshToken = await this.jwtService.signAsync(payload, {
-      secret: this.configService.get(envFieldsNames.jwt.REFRSH_TOKEN_SECRET),
-      expiresIn: this.configService.get(
-        envFieldsNames.jwt.REFRESH_TOKEN_EXPIRES_IN,
-      ),
-    });
-    await this.createOrUpdateAuthTokens(user.id, refreshToken);
-    return { accessToken, refreshToken };
+    const jwt = await this.generateAccessToken(user);
+    await this.createOrUpdateAuthTokens(user.id, jwt);
+    return { jwt };
   }
 
-  async generateRefreshToken(user: User) {
+  async generateAccessToken(user: User) {
     const payload: JwtPayload = {
       email: user.email,
       sub: user.id,
       role: user.role as Role,
     };
-    const refreshToken = await this.jwtService.signAsync(payload, {
-      secret: this.configService.get(envFieldsNames.jwt.REFRSH_TOKEN_SECRET),
-      expiresIn: this.configService.get(
-        envFieldsNames.jwt.REFRESH_TOKEN_EXPIRES_IN,
-      ),
+    return await this.jwtService.signAsync(payload, {
+      secret: this.configService.get(envFieldsNames.jwt.SECRET),
+      expiresIn: this.configService.get(envFieldsNames.jwt.EXP),
     });
-    return await this.createOrUpdateAuthTokens(user.id, refreshToken);
   }
 }

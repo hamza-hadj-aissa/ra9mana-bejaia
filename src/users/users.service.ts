@@ -7,7 +7,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
-  users = [];
+  user = [];
   static id = 0;
 
   constructor(private readonly databaseService: DatabaseService) {}
@@ -29,7 +29,7 @@ export class UsersService {
   async findOne(
     id: number,
     options?: {
-      include?: ['refreshToken'];
+      include?: ['jwt'];
     },
   ): Promise<User | null> {
     return await this.databaseService.users.findUnique({
@@ -37,7 +37,7 @@ export class UsersService {
         id,
       },
       include: {
-        refreshToken: options?.include?.includes('refreshToken'),
+        jwt: options?.include?.includes('jwt'),
       },
     });
   }

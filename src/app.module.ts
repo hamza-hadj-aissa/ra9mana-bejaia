@@ -1,18 +1,16 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuthTokensModule } from './auth-tokens/auth-tokens.module';
 import { AuthModule } from './auth/auth.module';
+import { JwtAuthGuard, RolesGuard } from './common/guards';
 import { DatabaseModule } from './database/database.module';
 import { LoggerModule } from './logger/logger.module';
 import { UsersModule } from './users/users.module';
-import { ConfigModule } from '@nestjs/config';
-import { AuthTokensModule } from './auth-tokens/auth-tokens.module';
-import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard, RolesGuard } from './common/guards';
 
-const envFilePath =
-  process.env.NODE_ENV === 'production' ? '.env' : '.env.development';
 @Module({
   imports: [
     UsersModule,
@@ -28,7 +26,6 @@ const envFilePath =
     AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: envFilePath,
     }),
     AuthTokensModule,
   ],
