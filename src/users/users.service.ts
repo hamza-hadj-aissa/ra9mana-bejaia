@@ -27,7 +27,7 @@ export class UsersService {
   }
 
   async findOne(
-    id: number,
+    id: string,
     options?: {
       include?: ['jwt'];
     },
@@ -50,7 +50,7 @@ export class UsersService {
     });
   }
 
-  async updateUserInfo(id: number, updateUserDto: UpdateUserDto) {
+  async updateUserInfo(id: string, updateUserDto: UpdateUserDto) {
     return await this.databaseService.users.update({
       where: {
         id,
@@ -61,7 +61,7 @@ export class UsersService {
     });
   }
 
-  async updatePassword(id: number, password: string) {
+  async updatePassword(id: string, password: string) {
     return await this.databaseService.users.update({
       where: {
         id,
@@ -72,7 +72,7 @@ export class UsersService {
     });
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     return await this.databaseService.users.delete({
       where: {
         id,

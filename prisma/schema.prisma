@@ -9,7 +9,7 @@ datasource db {
 
 
 model Users {
-  id        Int      @id @default(autoincrement())
+  id        String      @id @default(uuid())
   name      String  
   age       Int
   email     String   @unique
@@ -22,67 +22,93 @@ model Users {
 }
 
 model Jwt {
-  id        Int   @id @default(autoincrement())
+  id        String   @id @default(uuid())
   token     String   @unique
   user      Users     @relation(fields: [userId], references: [id])
-  userId    Int @unique
+  userId    String @unique
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-enum Role {
-  USER
-  ADMIN
-}
+
 
 model ResetToken {
-  id        Int   @id @default(autoincrement())
+  id        String   @id @default(uuid())
   token     String   @unique
   expiresAt DateTime
   user      Users     @relation(fields: [userId], references: [id])
-  userId    Int
+  userId    String
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-model Ship {
-  id        Int     @id @default(autoincrement())
+model Ships {
+  id        String     @id @default(uuid())
   name      String
   height    Float
   width     Float
   trips     Trip[]
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Trip {
-  id        Int     @id @default(autoincrement())
-  name      String
-  ship      Ship    @relation(fields: [shipId], references: [id])
-  shipId    Int
+  id        String     @id @default(uuid())
+  departureTime DateTime
+  arrivalTime   DateTime
+  parkingTime   Int
+  ship      Ships    @relation(fields: [shipId], references: [id])
+  shipId    String
   cargo     CargoType    @relation(fields: [cargoId], references: [id])
-  cargoId   Int
+  cargoId   String
   urgency   Urgency    @relation(fields: [urgencyId], references: [id])
-  urgencyId Int
+  urgencyId String
   specialCondition SpecialCondition? @relation(fields: [specialConditionId], references: [id])
-  specialConditionId Int?
+  deck      Decks @relation(fields: [deckId], references: [id])
+  deckId    String
+  specialConditionId String?
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model CargoType {
-  id        Int     @id @default(autoincrement())
-  name      String
+  id        String     @id @default(uuid())
+  name      String @unique
+  weight  Int
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   cargos    Trip[]
 }
 
 model Urgency {
-  id        Int     @id @default(autoincrement())
-  name      String
+  id        String     @id @default(uuid())
+  name      String @unique
+  weight  Int
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   urgencies Trip[]
 }
 
 model SpecialCondition {
-  id        Int     @id @default(autoincrement())
-  name      String
+  id        String     @id @default(uuid())
+  name      String @unique
+  weight  Int
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   trips     Trip[]
+}
+
+model Decks {
+  id        String     @id @default(uuid())
+  name      String
+  height    Float
+  width     Float
+  trips      Trip[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  USER
+  ADMIN
 }

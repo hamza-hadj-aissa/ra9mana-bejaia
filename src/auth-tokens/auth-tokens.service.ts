@@ -15,10 +15,11 @@ export class AuthTokensService {
     private readonly configService: ConfigService,
   ) {}
 
-  async createOrUpdateAuthTokens(userId: number, token: string) {
+  async createOrUpdateAuthTokens(userId: string, token: string) {
+    console.log('userId', userId);
     return await this.databaseService.jwt.upsert({
       where: {
-        id: userId,
+        userId,
       },
       create: {
         userId,
@@ -30,7 +31,7 @@ export class AuthTokensService {
     });
   }
 
-  async findAuthTokensByUserId(userId: number) {
+  async findAuthTokensByUserId(userId: string) {
     return await this.databaseService.jwt.findUnique({
       where: {
         userId,
@@ -46,7 +47,7 @@ export class AuthTokensService {
     });
   }
 
-  async deleteRefreshToken(userId: number) {
+  async deleteRefreshToken(userId: string) {
     return await this.databaseService.jwt.delete({
       where: {
         userId,

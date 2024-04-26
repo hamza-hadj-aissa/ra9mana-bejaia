@@ -3,7 +3,7 @@ import { RefreshToken } from './refresh-token.entity';
 
 export class User {
   @Expose()
-  id: number;
+  id: string;
   @Expose()
   name: string;
   @Expose()

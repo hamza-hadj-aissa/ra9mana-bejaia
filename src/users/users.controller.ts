@@ -7,7 +7,6 @@ import {
   Get,
   NotFoundException,
   Param,
-  ParseIntPipe,
   Post,
   Put,
   Query,
@@ -15,7 +14,6 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { Prisma, Role } from '@prisma/client';
-import { Roles } from 'src/common/decorators/roles.decorator';
 import { HashingService } from 'src/shared/hashing/hashing.interface';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -23,7 +21,6 @@ import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 
 @Controller('users')
-@Roles(Role.ADMIN)
 export class UserController {
   constructor(
     private readonly usersService: UsersService,
@@ -62,11 +59,8 @@ export class UserController {
     return await this.usersService.findAll(role);
   }
 
-  @Roles(Role.ADMIN, Role.USER)
   @Get(':id')
-  async findOne(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<User | NotFoundException> {
+  async findOne(@Param('id') id: string): Promise<User | NotFoundException> {
     const user = await this.usersService.findOne(id);
     if (!user) {
       return new NotFoundException('User not found');
@@ -74,10 +68,9 @@ export class UserController {
     return user;
   }
 
-  @Roles(Role.ADMIN, Role.USER)
   @Put(':id')
   async update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Body(
       new ValidationPipe({
         transform: true,
@@ -90,14 +83,13 @@ export class UserController {
   }
 
   @Delete(':id')
-  async remove(@Param('id', ParseIntPipe) id: number): Promise<User> {
-    return await this.usersService.remove(+id);
+  async remove(@Param('id') id: string): Promise<User> {
+    return await this.usersService.remove(id);
   }
 
-  @Roles(Role.ADMIN, Role.USER)
   @Get('profile/:id')
   async getProfile(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Request() req,
   ): Promise<User | null> {
     if (Number(id) !== Number(req.user.sub)) {
@@ -105,7 +97,7 @@ export class UserController {
         'You are not allowed to access this resource',
       );
     }
-    const user = await this.usersService.findOne(Number(id));
+    const user = await this.usersService.findOne(id);
     if (!user) {
       throw new NotFoundException('User not found');
     }
