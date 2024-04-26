@@ -44,7 +44,7 @@ model ResetToken {
 
 model Ships {
   id        String     @id @default(uuid())
-  name      String
+  name      String @unique
   height    Float
   width     Float
   trips     Trip[]
@@ -59,11 +59,9 @@ model Trip {
   parkingTime   Int
   ship      Ships    @relation(fields: [shipId], references: [id])
   shipId    String
-  cargo     CargoType    @relation(fields: [cargoId], references: [id])
-  cargoId   String
-  urgency   Urgency    @relation(fields: [urgencyId], references: [id])
-  urgencyId String
-  specialCondition SpecialCondition? @relation(fields: [specialConditionId], references: [id])
+  cargoType      CargoType
+  urgency        Urgency
+  specialCondition SpecialCondition?
   deck      Decks @relation(fields: [deckId], references: [id])
   deckId    String
   specialConditionId String?
@@ -71,36 +69,60 @@ model Trip {
   updatedAt DateTime @updatedAt
 }
 
-model CargoType {
-  id        String     @id @default(uuid())
-  name      String @unique
-  weight  Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  cargos    Trip[]
+enum CargoType {
+  DANGEROUS_GOODS
+  PASSENGER
+  CARGO
+  MILITARY
+  FISHING
+  RECREATIONAL
+  OTHER
 }
 
-model Urgency {
-  id        String     @id @default(uuid())
-  name      String @unique
-  weight  Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  urgencies Trip[]
+enum Urgency {
+  HIGH
+  MEDIUM
+  LOW
 }
 
-model SpecialCondition {
-  id        String     @id @default(uuid())
-  name      String @unique
-  weight  Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  trips     Trip[]
+enum SpecialCondition {
+  EMERGENCY
+  FIRE
+  MEDICAL_EMERGENCY
+  MALFUNCTION
+  OTHER
 }
+
+// model CargoType {
+//   id        String     @id @default(uuid())
+//   name      String @unique
+//   weight  Int
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   cargos    Trip[]
+// }
+
+// model Urgency {
+//   id        String     @id @default(uuid())
+//   name      String @unique
+//   weight  Int
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   urgencies Trip[]
+// }
+
+// model SpecialCondition {
+//   id        String     @id @default(uuid())
+//   name      String @unique
+//   weight  Int
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   trips     Trip[]
+// }
 
 model Decks {
   id        String     @id @default(uuid())
-  name      String
+  name      String @unique
   height    Float
   width     Float
   trips      Trip[]

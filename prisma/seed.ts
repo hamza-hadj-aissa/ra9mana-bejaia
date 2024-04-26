@@ -1,4 +1,4 @@
-import { PrismaClient, Role } from '@prisma/client';
+import { CargoType, PrismaClient, Role, Urgency } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
 const prisma = new PrismaClient();
 async function seedUser({
@@ -25,57 +25,6 @@ async function seedUser({
       password,
     },
   });
-}
-
-async function seedCargoTypes({
-  cargoTypes,
-}: {
-  cargoTypes: { name: string; weight: number }[];
-}) {
-  return await Promise.all(
-    cargoTypes.map(
-      ({ id, name, weight }: { id: string; name: string; weight: number }) =>
-        prisma.cargoType.upsert({
-          where: { name },
-          update: {},
-          create: { id, name, weight },
-        }),
-    ),
-  );
-}
-
-async function seedSpecialConditions({
-  specialConditions,
-}: {
-  specialConditions: { id: string; name: string; weight: number }[];
-}) {
-  return await Promise.all(
-    specialConditions.map(
-      ({ id, name, weight }: { id: string; name: string; weight: number }) =>
-        prisma.specialCondition.upsert({
-          where: { name },
-          update: {},
-          create: { id, name, weight },
-        }),
-    ),
-  );
-}
-
-async function seedUrgencies({
-  urgencies,
-}: {
-  urgencies: { id: string; name: string; weight: number }[];
-}) {
-  return await Promise.all(
-    urgencies.map(
-      ({ id, name, weight }: { id: string; name: string; weight: number }) =>
-        prisma.urgency.upsert({
-          where: { name },
-          update: {},
-          create: { id, name, weight },
-        }),
-    ),
-  );
 }
 
 async function seedShips({
@@ -157,11 +106,11 @@ async function seedTrips(
     id: string;
     shipId: string;
     deckId: string;
-    cargoId: string;
-    specialConditionId: string;
-    urgencyId: string;
     departureTime: Date;
     arrivalTime: Date;
+    parkingTime: number;
+    cargoType: CargoType;
+    urgency: Urgency;
   }[],
 ) {
   return await Promise.all(
@@ -170,22 +119,20 @@ async function seedTrips(
         id,
         shipId,
         deckId,
-        cargoId,
-        specialConditionId,
-        urgencyId,
         departureTime,
         arrivalTime,
         parkingTime,
+        cargoType,
+        urgency,
       }: {
         id: string;
         shipId: string;
         deckId: string;
-        cargoId: string;
-        specialConditionId: string;
-        urgencyId: string;
         departureTime: Date;
         arrivalTime: Date;
         parkingTime: number;
+        cargoType: CargoType;
+        urgency: Urgency;
       }) =>
         prisma.trip.upsert({
           where: { id },
@@ -194,12 +141,11 @@ async function seedTrips(
             id,
             shipId,
             deckId,
-            cargoId,
-            specialConditionId,
-            urgencyId,
             departureTime,
             arrivalTime,
             parkingTime,
+            cargoType,
+            urgency,
           },
         }),
     ),
@@ -221,27 +167,6 @@ async function main() {
     role: Role.USER,
     password: '$2b$10$2zUN7q9T/F7BjoN4XqFZ6elWgT5/SS27GQtnyYLJg/FQF3ttSWwmW', // @Bcd123456
   };
-  const cargoTypes = [
-    { id: uuidv4(), name: 'DANGEROUS_GOODS', weight: 10 },
-    { id: uuidv4(), name: 'PASSENGER', weight: 5 },
-    { id: uuidv4(), name: 'CARGO', weight: 8 },
-    { id: uuidv4(), name: 'MILITARY', weight: 12 },
-    { id: uuidv4(), name: 'FISHING', weight: 6 },
-    { id: uuidv4(), name: 'RECREATIONAL', weight: 4 },
-    { id: uuidv4(), name: 'OTHER', weight: 3 },
-  ];
-  const specialConditions = [
-    { id: uuidv4(), name: 'EMERGENCY', weight: 10 },
-    { id: uuidv4(), name: 'FIRE', weight: 8 },
-    { id: uuidv4(), name: 'MEDICAL_EMERGENCY', weight: 6 },
-    { id: uuidv4(), name: 'MALFUNCTION', weight: 4 },
-    { id: uuidv4(), name: 'OTHER', weight: 2 },
-  ];
-  const urgencies = [
-    { id: uuidv4(), name: 'LOW', weight: 1 },
-    { id: uuidv4(), name: 'MEDIUM', weight: 2 },
-    { id: uuidv4(), name: 'HIGH', weight: 3 },
-  ];
   const ships = [
     {
       id: uuidv4(),
@@ -293,52 +218,45 @@ async function main() {
       id: uuidv4(),
       shipId: ships[0].id,
       deckId: decks[0].id,
-      cargoId: cargoTypes[0].id,
-      specialConditionId: specialConditions[0].id,
-      urgencyId: urgencies[0].id,
       departureTime: new Date(),
       arrivalTime: new Date(),
       parkingTime: 10,
+      cargoType: CargoType.CARGO,
+      urgency: Urgency.MEDIUM,
     },
     {
       id: uuidv4(),
       shipId: ships[1].id,
       deckId: decks[1].id,
-      cargoId: cargoTypes[1].id,
-      specialConditionId: specialConditions[1].id,
-      urgencyId: urgencies[1].id,
       departureTime: new Date(),
       arrivalTime: new Date(),
       parkingTime: 10,
+      cargoType: CargoType.PASSENGER,
+      urgency: Urgency.HIGH,
     },
     {
       id: uuidv4(),
       shipId: ships[2].id,
       deckId: decks[2].id,
-      cargoId: cargoTypes[2].id,
-      specialConditionId: specialConditions[2].id,
-      urgencyId: urgencies[2].id,
       departureTime: new Date(),
       arrivalTime: new Date(),
       parkingTime: 10,
+      cargoType: CargoType.CARGO,
+      urgency: Urgency.LOW,
     },
     {
       id: uuidv4(),
       shipId: ships[0].id,
       deckId: decks[0].id,
-      cargoId: cargoTypes[0].id,
-      specialConditionId: specialConditions[3].id,
-      urgencyId: urgencies[0].id,
       departureTime: new Date(),
       arrivalTime: new Date(),
       parkingTime: 10,
+      cargoType: CargoType.PASSENGER,
+      urgency: Urgency.MEDIUM,
     },
   ];
   await seedUser(admin);
   await seedUser(user);
-  await seedCargoTypes({ cargoTypes });
-  await seedSpecialConditions({ specialConditions });
-  await seedUrgencies({ urgencies });
   await seedShips({ ships });
   await seedDecks({ decks });
   await seedTrips(trips);

@@ -1,25 +1,23 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   ValidationPipe,
 } from '@nestjs/common';
-import { TripsService } from './trips.service';
 import { CreateTripDto } from './dto/create-trip.dto';
 import { UpdateTripDto } from './dto/update-trip.dto';
-import { Roles } from 'src/common/decorators';
-import { Role } from '@prisma/client';
+import { TripsService } from './trips.service';
 
 @Controller('trips')
 export class TripsController {
   constructor(private readonly tripsService: TripsService) {}
 
   @Post()
-  create(
+  async create(
     @Body(
       new ValidationPipe({
         transform: true,
@@ -28,22 +26,29 @@ export class TripsController {
     )
     createTripDto: CreateTripDto,
   ) {
-    return this.tripsService.create(createTripDto);
+    const trip = await this.tripsService.create(createTripDto);
+    return {
+      trip,
+      deckName: trip.deck.name,
+      shipName: trip.ship.name,
+    };
   }
 
   @Get()
-  findAll() {
-    return this.tripsService.findAll();
+  async findAll() {
+    return await this.tripsService.findAll();
   }
 
-  @Roles(Role.ADMIN, Role.USER)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.tripsService.findOne(id);
+  async findOne(@Param('id') id: string) {
+    const trip = await this.tripsService.findOne(id);
+    return {
+      trip,
+    };
   }
 
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body(
       new ValidationPipe({
@@ -53,11 +58,16 @@ export class TripsController {
     )
     updateTripDto: UpdateTripDto,
   ) {
-    return this.tripsService.update(id, updateTripDto);
+    const trip = await this.tripsService.update(id, updateTripDto);
+    return {
+      trip,
+    };
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.tripsService.remove(id);
+  async remove(@Param('id') id: string) {
+    return {
+      success: await this.tripsService.remove(id),
+    };
   }
 }

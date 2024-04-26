@@ -11,9 +11,6 @@ import { DatabaseModule } from './database/database.module';
 import { LoggerModule } from './logger/logger.module';
 import { UsersModule } from './users/users.module';
 import { ShipsModule } from './ships/ships.module';
-import { CargoTypeModule } from './cargo-type/cargo-type.module';
-import { UrgencyModule } from './urgency/urgency.module';
-import { SpecialConditionModule } from './special-condition/special-condition.module';
 import { TripsModule } from './trips/trips.module';
 import { DecksModule } from './decks/decks.module';
 
@@ -35,9 +32,6 @@ import { DecksModule } from './decks/decks.module';
     }),
     AuthTokensModule,
     ShipsModule,
-    CargoTypeModule,
-    UrgencyModule,
-    SpecialConditionModule,
     TripsModule,
     DecksModule,
   ],

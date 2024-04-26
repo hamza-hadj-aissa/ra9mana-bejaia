@@ -10,16 +10,26 @@ export class DecksService {
   async create(createDeckDto: CreateDeckDto) {
     return await this.databaseService.decks.create({
       data: createDeckDto,
+      include: {
+        trips: true,
+      },
     });
   }
 
   async findAll() {
-    return await this.databaseService.decks.findMany();
+    return await this.databaseService.decks.findMany({
+      include: {
+        trips: true,
+      },
+    });
   }
 
   async findOne(id: string) {
     return await this.databaseService.decks.findUnique({
       where: { id },
+      include: {
+        trips: true,
+      },
     });
   }
 
@@ -27,12 +37,18 @@ export class DecksService {
     return await this.databaseService.decks.update({
       where: { id },
       data: updateDeckDto,
+      include: {
+        trips: true,
+      },
     });
   }
 
   async remove(id: string) {
     return this.databaseService.decks.delete({
       where: { id },
+      include: {
+        trips: true,
+      },
     });
   }
 }
