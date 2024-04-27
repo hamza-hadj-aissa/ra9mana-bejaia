@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Patch,
   Post,
@@ -28,22 +29,42 @@ export class TripsController {
   ) {
     const trip = await this.tripsService.create(createTripDto);
     return {
-      trip,
-      deckName: trip.deck.name,
-      shipName: trip.ship.name,
+      id: trip?.id,
+      departureDate: trip?.departureTime,
+      arrivalDate: trip?.arrivalTime,
+      parkingTime: trip?.parkingTime,
+      ship: trip?.ship,
+      deck: trip?.deck,
     };
   }
 
   @Get()
   async findAll() {
-    return await this.tripsService.findAll();
+    return Promise.all(
+      (await this.tripsService.findAll()).map((trip) => ({
+        id: trip.id,
+        departureDate: trip?.departureTime,
+        arrivalDate: trip.arrivalTime,
+        parkingTime: trip.parkingTime,
+        ship: trip.ship,
+        deck: trip.deck,
+      })),
+    );
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const trip = await this.tripsService.findOne(id);
+    if (!trip) {
+      throw new NotFoundException(`Trip with id ${id} not found`);
+    }
     return {
-      trip,
+      id: trip.id,
+      departureDate: trip?.departureTime,
+      arrivalDate: trip.arrivalTime,
+      parkingTime: trip.parkingTime,
+      ship: trip.ship,
+      deck: trip.deck,
     };
   }
 
@@ -60,7 +81,12 @@ export class TripsController {
   ) {
     const trip = await this.tripsService.update(id, updateTripDto);
     return {
-      trip,
+      id: trip.id,
+      departureDate: trip?.departureTime,
+      arrivalDate: trip.arrivalTime,
+      parkingTime: trip.parkingTime,
+      ship: trip.ship,
+      deck: trip.deck,
     };
   }
 

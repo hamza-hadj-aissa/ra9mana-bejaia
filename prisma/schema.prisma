@@ -62,9 +62,8 @@ model Trip {
   cargoType      CargoType
   urgency        Urgency
   specialCondition SpecialCondition?
-  deck      Decks @relation(fields: [deckId], references: [id])
-  deckId    String
-  specialConditionId String?
+  deck      Decks?  @relation(fields: [deckId], references: [id])
+  deckId    String? @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -93,43 +92,21 @@ enum SpecialCondition {
   OTHER
 }
 
-// model CargoType {
-//   id        String     @id @default(uuid())
-//   name      String @unique
-//   weight  Int
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-//   cargos    Trip[]
-// }
-
-// model Urgency {
-//   id        String     @id @default(uuid())
-//   name      String @unique
-//   weight  Int
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-//   urgencies Trip[]
-// }
-
-// model SpecialCondition {
-//   id        String     @id @default(uuid())
-//   name      String @unique
-//   weight  Int
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-//   trips     Trip[]
-// }
-
 model Decks {
   id        String     @id @default(uuid())
   name      String @unique
   height    Float
   width     Float
-  trips      Trip[]
+  trip      Trip?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
+// model Parking {
+//   id        String     @id @default(uuid())
+//   trips      Trip[]
+// }
+ 
 enum Role {
   USER
   ADMIN

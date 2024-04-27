@@ -5,7 +5,7 @@ export class CreateTripDto {
   arrivalTime: Date;
   parkingTime: number;
   shipName: string;
-  deckName: string;
+  deckName?: string;
   cargoType: CargoType;
   urgency: Urgency;
   specialCondition?: SpecialCondition;

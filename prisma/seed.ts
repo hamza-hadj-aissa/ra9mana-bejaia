@@ -139,8 +139,8 @@ async function seedTrips(
           update: {},
           create: {
             id,
-            shipId,
-            deckId,
+            ship: { connect: { id: shipId } },
+            deck: { connect: { id: deckId } },
             departureTime,
             arrivalTime,
             parkingTime,
@@ -170,21 +170,51 @@ async function main() {
   const ships = [
     {
       id: uuidv4(),
-      name: 'ship1',
+      name: 'Ramy La Marine',
       height: 10,
       width: 5,
     },
     {
       id: uuidv4(),
-      name: 'ship2',
+      name: 'Rami La Marine 2',
       height: 8,
       width: 4,
     },
     {
       id: uuidv4(),
-      name: 'ship3',
+      name: 'Anis Ganguilo',
       height: 12,
       width: 6,
+    },
+    {
+      id: uuidv4(),
+      name: 'ramy ya lmnogol',
+      height: 6,
+      width: 3,
+    },
+    {
+      id: uuidv4(),
+      name: 'ship1',
+      height: 6,
+      width: 3,
+    },
+    {
+      id: uuidv4(),
+      name: 'ship2',
+      height: 6,
+      width: 3,
+    },
+    {
+      id: uuidv4(),
+      name: 'ship3',
+      height: 6,
+      width: 3,
+    },
+    {
+      id: uuidv4(),
+      name: 'ship4',
+      height: 6,
+      width: 3,
     },
   ];
   const decks = [
@@ -244,17 +274,12 @@ async function main() {
       cargoType: CargoType.CARGO,
       urgency: Urgency.LOW,
     },
-    {
-      id: uuidv4(),
-      shipId: ships[0].id,
-      deckId: decks[0].id,
-      departureTime: new Date(),
-      arrivalTime: new Date(),
-      parkingTime: 10,
-      cargoType: CargoType.PASSENGER,
-      urgency: Urgency.MEDIUM,
-    },
   ];
+  // const parking = [
+  // {
+  //   id: uuidv4(),
+  // },
+  // ];
   await seedUser(admin);
   await seedUser(user);
   await seedShips({ ships });
