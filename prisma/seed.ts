@@ -170,30 +170,6 @@ async function main() {
   const ships = [
     {
       id: uuidv4(),
-      name: 'Ramy La Marine',
-      height: 10,
-      width: 5,
-    },
-    {
-      id: uuidv4(),
-      name: 'Rami La Marine 2',
-      height: 8,
-      width: 4,
-    },
-    {
-      id: uuidv4(),
-      name: 'Anis Ganguilo',
-      height: 12,
-      width: 6,
-    },
-    {
-      id: uuidv4(),
-      name: 'ramy ya lmnogol',
-      height: 6,
-      width: 3,
-    },
-    {
-      id: uuidv4(),
       name: 'ship1',
       height: 6,
       width: 3,
