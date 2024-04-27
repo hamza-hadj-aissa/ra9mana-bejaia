@@ -1,4 +1,4 @@
-# NestJS Auth JWT Boilerplate
+# Harbour Optimization | GDSC ESTIN - Bejaia HACKATHON
 
 ## Description
 
